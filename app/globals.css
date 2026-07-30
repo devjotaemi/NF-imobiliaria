@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+}
+
+/*
+ * Paleta da marca. Verde-floresta pros fundos escuros e CTAs, off-white quente
+ * (areia) no lugar do cinza-azulado do Tailwind — o slate-50 deixava as fotos
+ * dos imóveis com aparência fria.
+ */
+@theme {
+  --color-verde-950: #12301e;
+  --color-verde-900: #1b4429;
+  --color-verde-800: #1f5231;
+  --color-verde-700: #245c38;
+  --color-verde-600: #2e7048;
+  --color-verde-500: #4e9b62;
+  --color-verde-300: #a8c4a0;
+  --color-verde-100: #dfeada;
+  --color-verde-50: #f0f5ee;
+
+  --color-sage: #5e8c63;
+
+  --color-areia-50: #f6f5f2;
+  --color-areia-100: #efede8;
+  --color-areia-200: #e4e1da;
+
+  --color-linha: #e7e5e0;
+  --color-tinta: #1a1a18;
+  --color-tinta-500: #6b6b66;
+  --color-tinta-400: #8d8d87;
+}
+
+/*
+ * O site é um material de venda: aparência clara e previsível, igual pra todo
+ * mundo. Não seguimos o dark mode do sistema de propósito — as cores vêm das
+ * classes do Tailwind nos componentes.
+ *
+ * Cuidado: uma regra `body { background: ... }` fora de cascade layer VENCE as
+ * utilities do Tailwind v4 (que ficam em @layer). Foi o que deixava a home
+ * escura e o título ilegível. Por isso aqui só definimos a fonte.
+ */
+body {
+  font-family: var(--font-sans);
+}
+
+/* Carrosséis e trilhas de filtro roláveis — a barra atrapalha o desenho. */
+@utility sem-barra {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
