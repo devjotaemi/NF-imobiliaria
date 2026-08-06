@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Property {
+  id                 String          @id @default(cuid())
+  referenceCode      String          @unique
+  slug               String          @unique
+  titulo             String
+  descricao          String
+  tipoTransacao      TipoTransacao
+  tipoImovel         TipoImovel
+  precoCentavos      Int?
+  precoSobConsulta   Boolean         @default(false)
+  condominioCentavos Int?
+  iptuCentavos       Int?
+  iptuPeriodo        PeriodoIptu?
+  bairro             String?
+  cidade             String
+  estado             String
+  cep                String?
+  quartos            Int?
+  suites             Int?
+  banheiros          Int?
+  vagas              Int?
+  areaUtilM2         Int?
+  areaTerrenoM2      Int?
+  andar              Int?
+  totalAndares       Int?
+  torres             Int?
+  anoConstrucao      Int?
+  caracteristicas    String[]
+  garantiasAceitas   String[]
+  destaque           Boolean         @default(false)
+  ativo              Boolean         @default(true)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  fotos              PropertyPhoto[]
+  cliques            WhatsAppClick[]
+
+  @@index([destaque, ativo])
+  @@index([ativo])
+}
+
+model PropertyPhoto {
+  id         String   @id @default(cuid())
+  propertyId String
+  url        String
+  storageKey String
+  ordem      Int
+  altText    String?
+  width      Int?
+  height     Int?
+  createdAt  DateTime @default(now())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId, ordem])
+}
+
+model WhatsAppClick {
+  id                     String    @id @default(cuid())
+  propertyId             String?
+  propertySlugSnapshot   String?
+  propertyTituloSnapshot String?
+  placement              String
+  utmSource              String?
+  utmMedium              String?
+  utmCampaign            String?
+  utmContent             String?
+  utmTerm                String?
+  referrer               String?
+  userAgentRaw           String?
+  createdAt              DateTime  @default(now())
+  property               Property? @relation(fields: [propertyId], references: [id])
+
+  @@index([createdAt])
+  @@index([utmCampaign, createdAt])
+  @@index([propertyId])
+}
+
+model CampaignSpend {
+  id            String   @id @default(cuid())
+  campanha      String
+  valorCentavos Int
+  mesReferencia DateTime
+  observacoes   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([campanha, mesReferencia])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  senhaHash String
+  nome      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TipoTransacao {
+  venda
+  aluguel
+}
+
+enum TipoImovel {
+  apartamento
+  casa
+  casa_condominio
+  cobertura
+  kitnet_studio
+  sala_comercial
+  loja
+  galpao
+  terreno
+  chacara_sitio_fazenda
+  outro
+}
+
+enum PeriodoIptu {
+  mensal
+  anual
+}
